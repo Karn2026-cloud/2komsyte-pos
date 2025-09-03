@@ -25,15 +25,7 @@ app.use((req, res, next) => {
   return express.json()(req, res, next);
 });
 
-// index.js - KOMSYTE Backend (Ready for Hosting)
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-// ... other imports remain the same
-require('dotenv').config();
-
-// ...
 
 // ✅ PERFECTED CORS CONFIGURATION FOR HOSTING
 const allowedOrigins = [
@@ -518,6 +510,7 @@ app.get('/api/bills', authMiddleware, async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
 
 
 
