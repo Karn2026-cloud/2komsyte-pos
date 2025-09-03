@@ -34,22 +34,22 @@ app.use((req, res, next) => {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
-  process.env.FRONTEND_URL, // This is for your main production URL
-  // 👇 ADD THIS LINE from the error message
-  'https://komsyte-pos-frontend-2-git-main-komsyte-poss-projects.vercel.app'
-].filter(Boolean);
+  'https://komsyte-pos-frontend-2.vercel.app', // Your main production URL
+  'https://komsyte-pos-frontend-2-git-main-komsyte-poss-projects.vercel.app' // The specific URL from your error log
+];
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl) or from our allowed list
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error('CORS Error: Request from this origin was blocked:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
 }));
-
 // ... rest of your backend code
 // ... The rest of your backend code remains exactly the same
 
@@ -509,6 +509,7 @@ app.get('/api/bills', authMiddleware, async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
 
 
 
