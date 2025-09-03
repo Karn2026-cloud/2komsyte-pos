@@ -25,24 +25,42 @@ app.use((req, res, next) => {
   return express.json()(req, res, next);
 });
 
+// index.js - KOMSYTE Backend (Ready for Hosting)
+
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+// ... other imports remain the same
+require('dotenv').config();
+
+// ...
+
+// ✅ PERFECTED CORS CONFIGURATION FOR HOSTING
 const allowedOrigins = [
+  // For local development
   'http://localhost:3000',
   'http://localhost:5173',
-  process.env.FRONTEND_URL,
-  'https://komsyte-pos-frontend-2.vercel.app', // ✨ ADD THIS LINE
-  'https://komsyte-pos-frontend-2-git-main-komsyte-poss-projects.vercel.app'
-].filter(Boolean);
+  
+  // For your live Vercel frontend.
+  // This value should be set in your Render environment variables.
+  process.env.FRONTEND_URL 
+].filter(Boolean); // .filter(Boolean) removes any falsy values like null or undefined
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
     }
+    return callback(null, true);
   },
   credentials: true
 }));
 
+// ... The rest of your backend code remains exactly the same
 
 // ---------------- MongoDB ----------------
 mongoose.connect(process.env.MONGO_URI)
@@ -500,5 +518,6 @@ app.get('/api/bills', authMiddleware, async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
 
 
